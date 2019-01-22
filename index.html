@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>HOME</title>
+  <style>
+    button {
+      width: 120px;
+      height: 30px
+    }
+  </style>
+</head>
+<body>
+  <button onclick="openwin()">用户界面的按钮</button>
+  <button onclick="openwin2()">客服界面的按钮</button>
+</body>
+<script>
+  function openwin() {
+    window.open ("./user.html", "newwindow", "height=500, width=600, toolbar =no, menubar=no, scrollbars=no, resizable=no, location=no, status=no") //写成一行  
+  }  
+
+  function openwin2() {
+    window.open("./customService.html")
+  }
+</script>
+</html>

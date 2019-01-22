@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>用户</title>
+  <link rel="stylesheet" type="text/css" media="all" href="./layui243/css/layui.css" />
+  <script type="text/javascript" src="./layui243/layui.js"></script>
+  <script type="text/javascript" src="./jquery-3.1.1.min.js"></script>
+  <style>
+    button {
+      width: 100px;
+      height: 30px
+    }
+    #content .contentTop {
+      height: 270px;
+      overflow-y: auto;
+    }
+    #content .textarea {
+      width: 460px;
+      height: 90px;
+      margin: 18px;
+      border: 1px solid #ccc;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    #content button {
+      margin-left: 18px;
+    }
+    #submit {
+      margin-right: 100px
+    }
+  </style>
+</head>
+<body>
+  <div id='content' style='display: none'>
+    <div class="contentTop"></div>
+    <div class="contentBottom">
+      <button type="button" class="layui-btn" id="uploadImg">上传图片</button>
+      <div class="textarea" contenteditable="true"></div>
+      <button id='submit'>Submit</button>
+    </div>
+  </div>
+  <div>
+    <button id='btn'>联系客服</button>
+  </div>
+</body>
+<script>
+  var basePath = 'http://10.9.67.25:8080';
+  var userId = '', sessionData = {};
+
+  function chatPool(value) {
+    if (value) {
+      userId = value.data.userId;
+      $.ajax({
+        type : "GET",
+        url : basePath + "/chat/poll",
+        dataType : "json",
+        data: { receiverId: 'lifahui', sid: value.data.sid },
+        success : function(res) {
+          if(res && res.data){
+            $('.contentTop').append(`<div style="width:400px;margin:10px 48px;border:1px solid #ccc;padding:10px;">${res.data.from}: ${res.data.content}</div>`);
+            chatPool(sessionData);
+          }
+        }
+      })
+    }
+  }
+
+  $('#btn').click(function() {
+    $.ajax({
+      type : "POST",
+      url : basePath + "/chat/session",
+      dataType : "json",
+      data: { isClient: true },
+      success : function(data) {
+        sessionData = data;
+        chatPool(sessionData);
+      }
+    });
+
+    layui.use(['layer'], function(){
+      var layer = layui.layer;
+      layer.open({
+        type: 1,
+        title: 'talking',
+        content: $('#content'),
+        offset: 'auto',
+        area: ['520px', '560px'],
+        cancel: function(index, layero){
+          $('.contentTop').empty();
+          layer.close(index)
+        }  
+      });
+    });
+  })
+
+  $('#submit').click(function() {
+    var value = $('.textarea').html();
+    $.ajax({
+      type : "POST",
+      url : basePath + "/chat/push",
+      dataType : "json",
+      data: { clientId: 'lifahui', clientApp: 'b2b', userId: userId, info: value, direction: 1 },
+      success : function(data) {
+        console.log('data--',data);
+      }
+    });
+    $('.contentTop').append(`<div style="width:400px;margin:10px 48px;text-align:right;border:1px solid #ccc;padding:10px;">lifahui: ${value}</div>`);
+    $('.textarea').html('');
+  })
+
+  layui.use('upload', function(){
+    var upload = layui.upload;
+    
+    var uploadInst = upload.render({
+      elem: '#uploadImg',
+      url: basePath + "/chat/uploadImg",
+      done: function(res){
+        if (res && res.data) {
+          $('.textarea').append(`<img src=http://${res.data} style="width:150px;">`);
+        }
+      },
+      error: function(){
+      }
+    });
+  });
+</script>
+</html>

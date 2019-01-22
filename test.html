@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" media="all" href="./layui243/css/layui.css" />
+  <script type="text/javascript" src="./layui243/layui.js"></script>
+  <style>
+      .layui-tab-title li{
+          display: block;
+      }
+      .layui-tab-title{
+          float: left;
+          width: 200px;
+      }
+      .layui-tab-content{
+          float: left;
+          width: 500px;
+      }
+  </style>
+</head>
+<body>
+  <div class="layui-tab">
+      <ul class="layui-tab-title">
+        <li>网站设置</li>
+        <li>用户管理</li>
+        <li>权限分配</li>
+        <li>商品管理</li>
+        <li>订单管理</li>
+      </ul>
+      <div class="layui-tab-content">
+        <div class="layui-tab-item">内容1</div>
+        <div class="layui-tab-item">内容2</div>
+        <div class="layui-tab-item">内容3</div>
+        <div class="layui-tab-item">内容4</div>
+        <div class="layui-tab-item">内容5</div>
+      </div>
+    </div>
+      
+    <script>
+    layui.use('element', function(){
+      var element = layui.element;
+      
+    });
+    </script>
+</body>
+</html>
